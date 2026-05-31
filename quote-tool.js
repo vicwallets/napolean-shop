@@ -359,4 +359,195 @@ function buildQuote() {
   const pQid    = document.getElementById("print-quote-id");
   if (pcName)  pcName.textContent  = customer.name;
   if (pcAddr)  pcAddr.textContent  = customer.addr || "—";
-  if (pcPhone) pcPhone.textContent = customer.phone
+  if (pcPhone) pcPhone.textContent = customer.phone || "—";
+  if (pDate)   pDate.textContent   = "Date: " + quote.date;
+  if (pQid)    pQid.textContent    = "Quote #: " + ("Q-" + zip + "-" + Date.now().toString().slice(-5));
+  renderResults(quote);
+}
+
+function addRole(part, role) {
+  return Object.assign({}, part, { role: role });
+}
+
+function priceSystem(system, markupPct, discountPct) {
+  const priced = system.parts.map(p => {
+    const cost = window.stockCost ? window.stockCost(p.model) : 0;
+    // Retail = cost * (1 + markup). The 29% default matches STW's sale price.
+    const retail = cost * (1 + markupPct);
+    const final = retail * (1 - discountPct);
+    return Object.assign({}, p, { cost: cost, retail: retail, final: final });
+  });
+  const totalCost   = priced.reduce((s, p) => s + p.cost,   0);
+  const totalRetail = priced.reduce((s, p) => s + p.retail, 0);
+  const totalFinal  = priced.reduce((s, p) => s + p.final,  0);
+  const margin = totalFinal - totalCost;
+  const marginPct = totalCost > 0 ? margin / totalFinal : 0;
+  return Object.assign({}, system, {
+    parts: priced, totalCost: totalCost, totalRetail: totalRetail, totalFinal: totalFinal,
+    margin: margin, marginPct: marginPct
+  });
+}
+
+function fmt(n) { return "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+function renderResults(q) {
+  const regionName = { N: "Northern", SE: "Southeast", SW: "Southwest" }[q.region];
+
+  const summary =
+    '<div class="quote-summary">' +
+      '<div class="summary-row">' +
+        '<div>' +
+          '<h3>Estimated System Size</h3>' +
+          '<p>ZIP <strong>' + q.zip + '</strong> (Climate Zone ' + q.zone + ', DOE ' + regionName + ') &middot; <strong>' + q.sqft.toLocaleString() + ' sqft</strong> &middot; ' + q.sqftPerTon + ' sqft/ton</p>' +
+        '</div>' +
+        '<div class="est-tonnage">' + q.tons + ' Tons<small>' + Math.round(q.tons * 12000).toLocaleString() + ' BTU/h</small></div>' +
+      '</div>' +
+      '<div class="pricing-display">' +
+        '<span>Markup: <strong>' + (q.markupPct*100).toFixed(0) + '%</strong></span>' +
+        '<span>Discount: <strong>' + (q.discountPct*100).toFixed(1) + '%</strong></span>' +
+        '<span>Customer: <strong>' + (q.customer.name || "—") + '</strong></span>' +
+      '</div>' +
+    '</div>';
+
+  const sys = q.systems.map(s => renderSystem(s, q)).join("");
+  const actions =
+    '<div class="quote-actions no-print">' +
+      '<button class="btn-print btn-print-customer" onclick="printQuote(\'customer\')">Print Customer Quote</button>' +
+      '<button class="btn-print btn-print-internal" onclick="printQuote(\'internal\')">Print Internal Quote (with cost)</button>' +
+    '</div>';
+
+  const footer = '<p class="quote-footer">Manual J estimate is for first-pass quoting only. Final sizing should account for insulation, windows, ceiling height, ductwork, and infiltration. Pricing valid 30 days from quote date.</p>';
+
+  document.getElementById("quote-results").innerHTML = summary + '<div class="system-options">' + sys + '</div>' + actions + footer;
+  document.getElementById("quote-results").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderSystem(s, q) {
+  const cls = "system-card" + (s.recommended ? " recommended" : "");
+  const savings = s.totalRetail - s.totalFinal;
+  const listLine = savings > 0 ? '<div class="sys-total-list">List ' + fmt(s.totalRetail) + ' &middot; Customer saves ' + fmt(savings) + '</div>' : '';
+
+  const ahri = findAhri(s.parts);
+  const ahriLine = ahri ? '<div class="sys-ahri">AHRI Certified Reference #' + ahri + '</div>' : '';
+
+  // Page view: just the system summary (title, subtitle, total)
+  const pageView =
+    '<div class="sys-page-view">' +
+      '<div class="sys-header">' +
+        '<div>' +
+          '<h4>' + s.title + '</h4>' +
+          '<div class="sys-sub">' + s.subtitle + '</div>' +
+          ahriLine +
+        '</div>' +
+        '<div class="sys-total">' +
+          '<div class="sys-total-final">' + fmt(s.totalFinal) + '</div>' +
+          listLine +
+        '</div>' +
+      '</div>' +
+      '<div class="sys-parts-summary">' +
+        s.parts.length + ' parts &middot; ' +
+        s.parts.map(p => p.role.replace(/ \(.+\)/, '')).join(', ') +
+      '</div>' +
+    '</div>';
+
+  // Print-only line-item view (rendered but hidden on screen)
+  const partsRows = s.parts.map(p => {
+    const qty = window.stockQty ? window.stockQty(p.model) : 0;
+    const loc = window.stockLoc ? window.stockLoc(p.model) : null;
+    const isSO = window.isSpecialOrder && window.isSpecialOrder(p.model);
+    const stockText = isSO ? 'Special order direct from Napoleon' : (qty > 0 ? qty + ' in stock @ ' + (loc || 'STW') : 'Special order');
+    const stwLink = window.stwUrl ? window.stwUrl(p.model) : null;
+    const stockCell = stwLink
+      ? '<a href="' + stwLink + '" target="_blank" style="color:#444;text-decoration:underline;">' + stockText + '</a>'
+      : stockText;
+    const specsLine = window.dimsLine ? window.dimsLine(p.model) : '';
+    const specsRow = specsLine ? '<div class="part-specs">' + specsLine + '</div>' : '';
+    return '<tr>' +
+      '<td class="part-role">' + p.role + '</td>' +
+      '<td class="part-name">' + p.name + specsRow + '</td>' +
+      '<td class="part-model"><span class="mono">' + p.model + '</span></td>' +
+      '<td class="part-price">' + fmt(p.retail) + '</td>' +
+      '<td class="part-cost internal-only">' + fmt(p.cost) + '</td>' +
+      '<td class="part-stock internal-only">' + stockCell + '</td>' +
+    '</tr>';
+  }).join("");
+
+  const printView =
+    '<div class="sys-print-view print-only">' +
+      '<div class="sys-print-header">' +
+        '<h4>' + s.title + '</h4>' +
+        '<div class="sys-sub">' + s.subtitle + '</div>' +
+        ahriLine +
+      '</div>' +
+      '<table class="sys-parts">' +
+        '<thead><tr>' +
+          '<th>Role</th><th>Item</th><th>Model</th><th>Retail</th>' +
+          '<th class="internal-only">Cost</th>' +
+          '<th class="internal-only">Stock</th>' +
+        '</tr></thead>' +
+        '<tbody>' + partsRows + '</tbody>' +
+        '<tfoot><tr>' +
+          '<td colspan="3" style="text-align:right;font-weight:700;">System Total</td>' +
+          '<td class="part-price" style="font-weight:700;">' + fmt(s.totalFinal) + '</td>' +
+          '<td class="part-cost internal-only" style="font-weight:700;">' + fmt(s.totalCost) + '</td>' +
+          '<td class="part-stock internal-only"></td>' +
+        '</tr></tfoot>' +
+      '</table>' +
+      '<div class="sys-margin-row internal-only">' +
+        'Margin: ' + fmt(s.margin) + ' (' + (s.marginPct*100).toFixed(1) + '%) &middot; ' +
+        'Sourced from STW (<a href="https://skipthewarehouse.com/quote-tool/" target="_blank" style="color:#d8352b;">quote tool</a>)' +
+      '</div>' +
+    '</div>';
+
+  return '<div class="' + cls + '" data-system="' + s.id + '">' + pageView + printView + '</div>';
+}
+
+function printQuote(mode) {
+  const q = window._lastQuote;
+  if (!q) return;
+  // Internal print requires the STW passcode
+  if (mode === "internal") {
+    const entered = prompt("Internal Quote Print\n\nEnter passcode to view cost, margin, and stock data:");
+    if (entered === null) return;  // user cancelled
+    if (entered.trim() !== INTERNAL_PASSCODE) {
+      alert("Incorrect passcode. Internal print blocked.");
+      return;
+    }
+  }
+  document.body.setAttribute("data-print-mode", mode);
+  // Temporarily blank document.title so the browser's print header doesn't
+  // show "Napoleon Quote Tool | Napolean.shop" at the top of every page.
+  const origTitle = document.title;
+  const custName = q.customer && q.customer.name ? q.customer.name : "Customer";
+  document.title = " ";  // single space = empty header in most browsers
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.removeAttribute("data-print-mode");
+      document.title = origTitle;
+    }, 1000);
+  }, 100);
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { lookupZip: lookupZip, snapToTon: snapToTon };
+}
+
+if (typeof document !== "undefined" && document.addEventListener) {
+  document.addEventListener("DOMContentLoaded", () => {
+    const zipEl = document.getElementById("zip");
+    if (zipEl) {
+      zipEl.addEventListener("input", () => {
+        const v = zipEl.value.trim();
+        const info = document.getElementById("zip-info");
+        if (info && /^\d{5}$/.test(v)) {
+          const lookup = lookupZip(v);
+          const r = { N: "Northern (13.4 SEER2 OK)", SE: "Southeast (14.3 SEER2 required)", SW: "Southwest (14.3 SEER2 + EER2 required)" }[lookup.region];
+          info.textContent = "Climate Zone " + lookup.zone + ", DOE " + r + ".";
+        } else if (info) {
+          info.textContent = "Climate zone and DOE region are derived from this.";
+        }
+      });
+    }
+  });
+}

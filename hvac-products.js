@@ -257,4 +257,3 @@ if (typeof document !== "undefined" && document.addEventListener) {
     renderGrid("grid-cp-mid",    CP_MID,         "Mid-Eff Condo Pack");
   });
 }
-   
