@@ -1,0 +1,19 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Build/temp artifacts
+node_modules/
+__pycache__/
+*.pyc
+.cache/
+dist/
+.tmp/
+
+# Local-only experimental files
+woo/
+products/__pycache__/

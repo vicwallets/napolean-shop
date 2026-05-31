@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Napoleon Quote Tool | Napolean.shop</title>
+  <meta name="description" content="Build a Napoleon HVAC system quote in 30 seconds. Manual J tonnage from zip code and square footage. Four matched system proposals with cost, markup, and printable quote.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="hvac.css">
+</head>
+<body data-nav="heating">
+  <div id="header-slot" class="no-print"></div>
+
+  <section class="page-header no-print">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><a href="heating.html">Heating &amp; Cooling</a><span>/</span>Napoleon Quote Tool</div>
+      <h1>Napoleon Quote Tool</h1>
+      <p>For dealers and sales reps. Enter zip, square footage, and customer info. The tool runs simplified Manual J, proposes four matched systems, applies your markup and any discount, and prints a quote you can hand to the customer.</p>
+    </div>
+  </section>
+
+  <!-- ULTIMATE 9700 FURNACE HERO -->
+  <section class="furnace-hero no-print">
+    <div class="container">
+      <div class="furnace-hero-grid">
+        <div class="furnace-hero-img">
+          <img class="furnace-photo"
+               src="assets/ultimate-9700.png"
+               alt="Napoleon Ultimate 9700 Series Gas Furnace"
+               onerror="this.style.display='none';document.querySelector('.furnace-illust').style.display='block';"
+               loading="lazy"/>
+          <svg class="furnace-illust" viewBox="0 0 280 420" xmlns="http://www.w3.org/2000/svg" aria-label="Napoleon Ultimate 9700 Series Gas Furnace" style="display:none;">
+            <defs>
+              <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#e8e8e8"/>
+                <stop offset="0.5" stop-color="#fafafa"/>
+                <stop offset="1" stop-color="#cfcfcf"/>
+              </linearGradient>
+              <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e84e3c"/>
+                <stop offset="1" stop-color="#b8281c"/>
+              </linearGradient>
+              <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2c5b8c"/>
+                <stop offset="1" stop-color="#0f2a4a"/>
+              </linearGradient>
+              <filter id="bodyShadow" x="-20%" y="-10%" width="140%" height="120%">
+                <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.4"/>
+              </filter>
+            </defs>
+
+            <!-- Twin flue pipes -->
+            <rect x="92"  y="0" width="14" height="38" fill="#dadada" stroke="#999" stroke-width="0.5"/>
+            <rect x="178" y="0" width="14" height="38" fill="#dadada" stroke="#999" stroke-width="0.5"/>
+
+            <!-- Top dark cap with red control strip -->
+            <rect x="60" y="30" width="160" height="42" rx="2" fill="#1a1a1a"/>
+            <rect x="60" y="40" width="160" height="26" fill="url(#redGrad)"/>
+            <!-- Control screen -->
+            <rect x="105" y="46" width="50" height="14" rx="1" fill="url(#screenGrad)"/>
+            <circle cx="113" cy="53" r="2" fill="#5dafff"/>
+            <circle cx="125" cy="53" r="2" fill="#5dafff"/>
+            <circle cx="137" cy="53" r="2" fill="#5dafff"/>
+            <!-- Napoleon brand tag on top right of red strip -->
+            <rect x="166" y="48" width="44" height="10" rx="1" fill="#1a1a1a"/>
+            <text x="188" y="55" fill="#fff" font-family="Georgia, serif" font-size="6" font-weight="700" text-anchor="middle" letter-spacing="0.5">NAPOLEON</text>
+
+            <!-- Main body with shadow -->
+            <g filter="url(#bodyShadow)">
+              <path d="M 50 72 L 230 72 L 224 388 L 56 388 Z" fill="url(#bodyGrad)" stroke="#aaa" stroke-width="0.5"/>
+              <!-- subtle vertical line for panel seam -->
+              <line x1="140" y1="72" x2="140" y2="388" stroke="#c0c0c0" stroke-width="0.5" opacity="0.6"/>
+            </g>
+
+            <!-- ULTIMATE 9700 SERIES vertical text -->
+            <g transform="translate(95, 240) rotate(-90)">
+              <text x="0" y="0" fill="#222" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="800" letter-spacing="3">ULTIMATE</text>
+              <text x="120" y="-8" fill="#222" font-family="Helvetica, Arial, sans-serif" font-size="7" font-weight="600" letter-spacing="2">9700 SERIES</text>
+            </g>
+
+            <!-- Napoleon flame logo near bottom -->
+            <g transform="translate(80, 340)">
+              <circle cx="0" cy="0" r="14" fill="none"/>
+              <path d="M0 -12 Q9 -4 6 6 Q3 12 0 13 Q-3 12 -6 6 Q-9 -4 0 -12 Z" fill="#d8352b"/>
+              <path d="M0 -7 Q5 -1 3 5 Q1 8 0 8 Q-1 8 -3 5 Q-5 -1 0 -7 Z" fill="#ffdb4d"/>
+            </g>
+
+            <!-- Stand / legs -->
+            <line x1="68"  y1="388" x2="68"  y2="408" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="212" y1="388" x2="212" y2="408" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="60"  y1="408" x2="220" y2="408" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+
+          <div class="hero-badge">
+            <span class="badge-row"><strong>97%</strong> AFUE</span>
+            <span class="badge-row">Two-Stage</span>
+            <span class="badge-row">Lifetime Heat Exchanger</span>
+          </div>
+        </div>
+        <div class="furnace-hero-copy">
+          <div class="hero-eyebrow">The heart of every quote</div>
+          <h2>Napoleon Ultimate 9700 Series</h2>
+          <p class="hero-tag">Napoleon's highest-efficiency gas furnace. Two-stage operation, Patented Vortex Technology, and the longest warranty in the category. Every gas-furnace system this tool proposes is built around this furnace.</p>
+
+          <div class="furnace-features">
+            <div class="feat">
+              <div class="feat-icon">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="14" y="6" width="32" height="48" rx="3" fill="#1f1f1f" stroke="#c8a063" stroke-width="1.5"/>
+                  <rect x="18" y="10" width="24" height="8" rx="1" fill="#d8352b"/>
+                  <rect x="18" y="22" width="24" height="14" rx="1" fill="#0a0a0a" stroke="#fff9b8" stroke-width="0.5"/>
+                  <line x1="22" y1="26" x2="38" y2="26" stroke="#fff9b8" stroke-width="0.8"/>
+                  <line x1="22" y1="30" x2="38" y2="30" stroke="#fff9b8" stroke-width="0.8"/>
+                  <rect x="18" y="38" width="24" height="14" rx="1" fill="#0a0a0a" stroke="#fff9b8" stroke-width="0.5"/>
+                  <line x1="22" y1="42" x2="38" y2="42" stroke="#fff9b8" stroke-width="0.8"/>
+                  <line x1="22" y1="46" x2="38" y2="46" stroke="#fff9b8" stroke-width="0.8"/>
+                </svg>
+              </div>
+              <h4>Modular Design with LED Cabinet Lights</h4>
+              <p>Removable heat exchanger and blower compartment. Interior LEDs turn on automatically when the front panels come off, so servicing the unit is a whole new experience.</p>
+            </div>
+            <div class="feat">
+              <div class="feat-icon">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="30" cy="30" r="22" fill="none" stroke="#c8a063" stroke-width="2"/>
+                  <path d="M30 12 Q44 22 38 36 Q30 46 22 36 Q16 22 30 12 Z" fill="#ff8a3d" opacity="0.85"/>
+                  <path d="M30 18 Q40 26 34 36 Q30 42 26 36 Q20 26 30 18 Z" fill="#ffe0b3"/>
+                  <circle cx="30" cy="30" r="3" fill="#fff"/>
+                </svg>
+              </div>
+              <h4>Patented Vortex Technology</h4>
+              <p>Stainless steel primary and secondary heat exchanger pulls more heat out of every BTU of gas. The reason the 9700 hits 97% AFUE.</p>
+            </div>
+            <div class="feat">
+              <div class="feat-icon">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000
