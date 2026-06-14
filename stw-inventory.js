@@ -1,6 +1,6 @@
 /* Skip The Warehouse - Napoleon In-Stock Inventory Snapshot
    Scraped from: https://vicwallets.github.io/Inventory/quote.html
-   Last scrape:  2026-06-13 6:00 PM ET
+   Last scrape:  2026-06-14 6:07 PM ET
    Auto-refreshed: Tuesdays, Thursdays, Sundays at 6:00 PM ET
 */
 
@@ -90,7 +90,7 @@ if(typeof window!=="undefined"){
   window.isInStock=isInStock;window.isAvailable=isAvailable;window.isSpecialOrder=isSpecialOrder;
   window.stwUrl=stwUrl;window.stockQty=stockQty;window.stockCost=stockCost;
   window.stockRetail=stockRetail;window.stockLoc=stockLoc;
-  window.STW_INV_LAST_SCRAPE="2026-06-13 6:00 PM ET";
+  window.STW_INV_LAST_SCRAPE="2026-06-14 6:07 PM ET";
   window.STW_MARKUP_DEFAULT=0.29;window.STW_DISCOUNT_MAX=0.15;
 }
 if(typeof module!=="undefined"&&module.exports){
